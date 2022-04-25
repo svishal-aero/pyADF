@@ -1,0 +1,6 @@
+**/__pycache__
+**/obj
+**/make.log
+**/lib*.so
+**/ADF_*
+**/a.out
