@@ -8,6 +8,7 @@ class Graph:
         self.conditionalHandler = ConditionalHandler()
         self.forwardBuffer      = FormattedBuffer()
         self.reverseBuffer      = FormattedBuffer(openTag='}',closeTag='{')
+        self.externalLibraries  = []
 
     @property
     def tapeSize(self): return len(self.nodeList)

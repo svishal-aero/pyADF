@@ -1,4 +1,5 @@
 import math
+from os.path import abspath
 
 from .GraphEntity       import GraphEntity
 from .ConditionalSwitch import ConditionalSwitch
@@ -7,6 +8,7 @@ from .OutputNode        import OutputNode
 from .ConstantNode      import ConstantNode
 from .UnaryNode         import UnaryNode
 from .BinaryNode        import BinaryNode
+from .FunctionNode      import FunctionNode
 from .utils             import getIndexInGraph
 
 class Scalar(GraphEntity):
@@ -96,3 +98,12 @@ def sqrt(x): return math.sqrt(x) if not isinstance(x,Scalar) else x.__sqrt__()
 def sinh(x): return math.sinh(x) if not isinstance(x,Scalar) else x.__sinh__()
 def cosh(x): return math.cosh(x) if not isinstance(x,Scalar) else x.__cosh__()
 def tanh(x): return math.tanh(x) if not isinstance(x,Scalar) else x.__tanh__()
+
+def processFunction(libPath, fName, argList):
+    assert len(argList)>0, 'At least one argument must be passed to an external function'
+    idList = []
+    for arg in argList: idList.append(arg.id)
+    libPath = abspath(libPath)
+    if libPath not in GraphEntity.graph.externalLibraries:
+        GraphEntity.graph.externalLibraries.append(libPath)
+    return Scalar(id=getIndexInGraph(FunctionNode(fName, idList), GraphEntity.graph))

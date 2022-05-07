@@ -4,7 +4,7 @@ from .FormattedBuffer import FormattedBuffer
 
 defDir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-def writeCalculateFile(buffer: FormattedBuffer, functionName, vars, forwardBuffer, reverseBuffer):
+def writeCalculateFile(buffer: FormattedBuffer, functionName, functionType, vars, forwardBuffer, reverseBuffer):
     buffer.write('#include "../'+functionName+'.h"')
     buffer.write('#include "'+defDir+'/CodeGeneration/CHeaders/defineOps.h"')
     buffer.write('')
@@ -16,7 +16,7 @@ def writeCalculateFile(buffer: FormattedBuffer, functionName, vars, forwardBuffe
     calculateDerivatives(buffer, functionName, reverseBuffer)
     updateDerivs(buffer, functionName, vars['inputs_AD'], vars['outputs_AD'])
     setInputs(buffer, functionName, vars['inputs_AD'], vars['inputs'])
-    getOutputs(buffer, functionName, vars['outputs'], vars['outputs_AD'])
+    getOutputs(buffer, functionName, functionType, vars['outputs'], vars['outputs_AD'])
 
 def calculate(buffer: FormattedBuffer, functionName, forwardBuffer: FormattedBuffer):
     buffer.write('')
@@ -85,7 +85,7 @@ def setInputs(buffer: FormattedBuffer, functionName, inputs_AD, inputs):
     buffer.closeScope()
     buffer.write('')
 
-def getOutputs(buffer: FormattedBuffer, functionName, outputs, outputs_AD):
+def getOutputs(buffer: FormattedBuffer, functionName, functionType, outputs, outputs_AD):
     buffer.write('static void getOutputs('+functionName+' *self, int size)')
     buffer.openScope()
     buffer.write('int iOutput = size-1;')
@@ -94,14 +94,20 @@ def getOutputs(buffer: FormattedBuffer, functionName, outputs, outputs_AD):
     for name, shape in zip(nameList, shapeList):
         buffer.write('for(int i=%d; i>=0; i--)' % (int(np.prod(shape))-1) )
         buffer.openScope()
-        buffer.write('self->'+name+'[i] = self->___phi[iOutput--];')
+        if functionType=='REPLACE':
+            buffer.write('self->'+name+'[i] = self->___phi[iOutput--];')
+        if functionType=='UPDATE':
+            buffer.write('self->'+name+'[i] += self->___phi[iOutput--];')
         buffer.closeScope()
     nameList = list(outputs.keys())[::-1]
     shapeList = list(outputs.values())[::-1]
     for name, shape in zip(nameList, shapeList):
         buffer.write('for(int i=%d; i>=0; i--)' % (int(np.prod(shape))-1) )
         buffer.openScope()
-        buffer.write('self->'+name+'[i] = self->___phi[iOutput--];')
+        if functionType=='REPLACE':
+            buffer.write('self->'+name+'[i] = self->___phi[iOutput--];')
+        if functionType=='UPDATE':
+            buffer.write('self->'+name+'[i] += self->___phi[iOutput--];')
         buffer.closeScope()
     buffer.closeScope()
     buffer.write('')
