@@ -1,7 +1,4 @@
-import os, sys
-sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)),'../..'))
-from pyADF import *
-sys.path.pop(0)
+import pyADF as AD
 
 def cons2prim(
     inputs_AD = { 'Uc':[4] },
@@ -14,7 +11,8 @@ def cons2prim(
     R     = inputs['R']
     
     U = [rhoU[0]/rho, rhoU[1]/rho]
-    p = (gamma-1.0) * (rhoE - 0.5 * rho * (U[0]**2 + U[1]**2))
+    #p = (gamma-1.0) * (rhoE - 0.5 * rho * (U[0]**2 + U[1]**2))
+    p = AD.processExternalFunction('calcP', args=[gamma, rhoE, rho, U[0], U[1]])
     H = (rhoE+p)/rho
 
     outputs = {}
@@ -24,4 +22,4 @@ def cons2prim(
     return outputs, outputs_AD
 
 if __name__=='__main__':
-    ADF_Compiler(cons2prim)
+    AD.compile(cons2prim)

@@ -2,11 +2,11 @@ import os
 import numpy as np
 from .FormattedBuffer import FormattedBuffer
 
-defDir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+defDir = os.path.dirname(os.path.abspath(__file__))
 
-def writeCalculateFile(buffer: FormattedBuffer, functionName, functionType, vars, forwardBuffer, reverseBuffer):
+def writeCalculateFile(buffer: FormattedBuffer, functionName, functionType, shapes, forwardBuffer, reverseBuffer):
     buffer.write('#include "../'+functionName+'.h"')
-    buffer.write('#include "'+defDir+'/CodeGeneration/CHeaders/defineOps.h"')
+    buffer.write('#include "'+defDir+'/CHeaders/defineOps.h"')
     buffer.write('')
     buffer.write('static void calculateDerivatives('+functionName+' *self);')
     buffer.write('static void updateDerivs('+functionName+' *self, int size);')
@@ -14,9 +14,9 @@ def writeCalculateFile(buffer: FormattedBuffer, functionName, functionType, vars
     buffer.write('static void getOutputs('+functionName+' *self, int size);')
     calculate(buffer, functionName, forwardBuffer)
     calculateDerivatives(buffer, functionName, reverseBuffer)
-    updateDerivs(buffer, functionName, vars['inputs_AD'], vars['outputs_AD'])
-    setInputs(buffer, functionName, vars['inputs_AD'], vars['inputs'])
-    getOutputs(buffer, functionName, functionType, vars['outputs'], vars['outputs_AD'])
+    updateDerivs(buffer, functionName, shapes['inputs_AD'], shapes['outputs_AD'])
+    setInputs(buffer, functionName, shapes['inputs_AD'], shapes['inputs'])
+    getOutputs(buffer, functionName, functionType, shapes['outputs'], shapes['outputs_AD'])
 
 def calculate(buffer: FormattedBuffer, functionName, forwardBuffer: FormattedBuffer):
     buffer.write('')
@@ -40,7 +40,7 @@ def calculateDerivatives(buffer: FormattedBuffer, functionName, reverseBuffer: F
     buffer.lines.append(reverseBuffer.getContents(indent=buffer.indent))
     buffer.closeScope()
     buffer.write('')
-    buffer.write('#include "'+defDir+'/CodeGeneration/CHeaders/undefOps.h"')
+    buffer.write('#include "'+defDir+'/CHeaders/undefOps.h"')
     buffer.write('')
 
 def updateDerivs(buffer: FormattedBuffer, functionName, inputs_AD, outputs_AD):

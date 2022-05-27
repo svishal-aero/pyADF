@@ -1,5 +1,5 @@
+import os
 import math
-from os.path import abspath
 
 from .GraphEntity       import GraphEntity
 from .ConditionalSwitch import ConditionalSwitch
@@ -99,11 +99,16 @@ def sinh(x): return math.sinh(x) if not isinstance(x,Scalar) else x.__sinh__()
 def cosh(x): return math.cosh(x) if not isinstance(x,Scalar) else x.__cosh__()
 def tanh(x): return math.tanh(x) if not isinstance(x,Scalar) else x.__tanh__()
 
-def processFunction(libPath, fName, argList):
-    assert len(argList)>0, 'At least one argument must be passed to an external function'
+def processExternalFunction(extfunc, args=[]):
+
+    assert len(args)>0, 'External function must have at least one argument'
+
     idList = []
-    for arg in argList: idList.append(arg.id)
-    libPath = abspath(libPath)
-    if libPath not in GraphEntity.graph.externalLibraries:
-        GraphEntity.graph.externalLibraries.append(libPath)
-    return Scalar(id=getIndexInGraph(FunctionNode(fName, idList), GraphEntity.graph))
+    for arg in args: idList.append(arg.id)
+    extfuncname = os.path.basename(extfunc)
+
+    includeLine = '#include "' + extfunc + '/' + extfuncname + '.h"'
+    if includeLine not in GraphEntity.graph.includes:
+        GraphEntity.graph.includes.append(includeLine)
+
+    return Scalar(id=getIndexInGraph(FunctionNode(extfuncname, idList), GraphEntity.graph))

@@ -4,22 +4,24 @@ class FunctionNode:
         self.functionName = functionName
         self.idList = idList
 
-    def isIdenticalto(self, other):
+    def isIdenticalTo(self, other):
         if self.functionName==other.functionName:
             if self.idList==other.idList:
                 return True
         return False
 
     def forwardStatement(self, id):
-        string = self.functionName + '(___phi, ' + id
-        for id in self.idList:
-            string += ', ' + str(self.idList[id])
-        string += ')'
+        string = '___phi[' + str(id) + '] = ' + self.functionName
+        string += '.calculate(___phi+' + str(self.idList[0])
+        for i in range(1,len(self.idList)):
+            string += ', ___phi+' + str(self.idList[i])
+        string += ');'
         return string
 
     def reverseStatement(self, id):
-        string = self.functionName + '(___psi, ' + id
-        for id in self.idList:
-            string += ', ' + str(self.idList[id])
-        string += ')'
+        string = self.functionName + '.d_calculate('
+        string += '___psi+' + str(id)
+        for i in range(len(self.idList)):
+            string += ', ___psi+' + str(self.idList[i])
+        string += ');'
         return string

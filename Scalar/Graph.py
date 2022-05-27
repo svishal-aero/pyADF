@@ -8,7 +8,7 @@ class Graph:
         self.conditionalHandler = ConditionalHandler()
         self.forwardBuffer      = FormattedBuffer()
         self.reverseBuffer      = FormattedBuffer(openTag='}',closeTag='{')
-        self.externalLibraries  = []
+        self.includes           = []
 
     @property
     def tapeSize(self): return len(self.nodeList)
@@ -16,9 +16,8 @@ class Graph:
     def initCompilationPass(self):
         self.conditionalHandler.initCompilationPass()
 
-    def finalizeCompilationPass(self):
+    def finalizeCompilationPass(self, disableDerivs=False):
         self.forwardBuffer.write('getOutputs(self, %d);' % (self.tapeSize))
-        self.forwardBuffer.write('#ifndef DISABLE_DERIVS')
-        self.forwardBuffer.write('updateDerivs(self, %d);' % (self.tapeSize))
-        self.forwardBuffer.write('#endif')
+        if not disableDerivs:
+            self.forwardBuffer.write('updateDerivs(self, %d);' % (self.tapeSize))
         self.conditionalHandler.finalizeCompilationPass()

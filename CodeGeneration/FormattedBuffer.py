@@ -1,6 +1,6 @@
 class FormattedBuffer:
     
-    def __init__(self, openTag='{', closeTag='}', tab='\t'):
+    def __init__(self, openTag='{', closeTag='}', tab='    '):
         self.lines     = []
         self.indent   = ''
         self.tab      = tab
