@@ -22,4 +22,4 @@ def cons2prim(
     return outputs, outputs_AD
 
 if __name__=='__main__':
-    AD.compile(cons2prim)
+    AD.compile(cons2prim, disableDerivs=True)
