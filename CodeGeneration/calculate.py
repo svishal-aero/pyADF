@@ -8,6 +8,8 @@ def writeCalculateFile(buffer: FormattedBuffer, functionName, functionType, shap
     buffer.write('#include "../'+functionName+'.h"')
     buffer.write('#include "'+defDir+'/CHeaders/defineOps.h"')
     buffer.write('')
+    buffer.write(functionName+' adf_'+functionName[4:]+';')
+    buffer.write('')
     buffer.write('static void calculateDerivatives('+functionName+' *self);')
     buffer.write('static void updateDerivs('+functionName+' *self, int size);')
     buffer.write('static void setInputs('+functionName+' *self);')

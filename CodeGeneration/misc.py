@@ -24,6 +24,8 @@ def writeStructFile(buffer: FormattedBuffer, functionName, shapes, includeLines,
     buffer.write(functionName+';')
     buffer.write('#pragma pack()')
     buffer.write('')
+    buffer.write('extern '+functionName+' adf_'+functionName[4:]+';')
+    buffer.write('')
     buffer.write('void '+functionName+'__init('+functionName+' *self);')
     buffer.write('void '+functionName+'__calculate('+functionName+' *self);')
 
