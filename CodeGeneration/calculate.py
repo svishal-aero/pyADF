@@ -22,10 +22,7 @@ def writeCalculateFile(buffer: FormattedBuffer, functionName, functionType, shap
 
 def calculate(buffer: FormattedBuffer, functionName, forwardBuffer: FormattedBuffer):
     buffer.write('')
-    buffer.write('void '+functionName+'__calculate')
-    buffer.write('(')
-    buffer.write('\t'+functionName+' *self')
-    buffer.write(')')
+    buffer.write('void '+functionName+'__calculate('+functionName+' *self)')
     buffer.openScope()
     buffer.write('double *___psi = self->___psi;')
     buffer.write('double *___phi = self->___phi;')

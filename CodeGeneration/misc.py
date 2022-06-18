@@ -26,14 +26,14 @@ def writeStructFile(buffer: FormattedBuffer, functionName, shapes, includeLines,
     buffer.write('')
     buffer.write('extern '+functionName+' adf_'+functionName[4:]+';')
     buffer.write('')
-    buffer.write('void '+functionName+'__init('+functionName+' *self);')
+    #buffer.write('void '+functionName+'__init('+functionName+' *self);')
     buffer.write('void '+functionName+'__calculate('+functionName+' *self);')
 
 def writeOtherFiles(buffer: FormattedBuffer, functionName, vars):
     buffer.write('#include <stdlib.h>')
     buffer.write('#include "../'+functionName+'.h"')
     buffer.write('')
-    buffer.write('void '+functionName+'__init('+functionName+' *self'+')')
+    buffer.write('void '+functionName+'__init('+functionName+' *self)')
     buffer.openScope()
     for name in vars['inputs_AD'].keys():  buffer.write('self->'+name+' = NULL;')
     for name in vars['inputs'].keys():     buffer.write('self->'+name+' = NULL;')

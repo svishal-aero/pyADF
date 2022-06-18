@@ -11,8 +11,8 @@ def cons2prim(
     R     = inputs['R']
     
     U = [rhoU[0]/rho, rhoU[1]/rho]
-    #p = (gamma-1.0) * (rhoE - 0.5 * rho * (U[0]**2 + U[1]**2))
-    p = AD.processExternalFunction('calcP', args=[gamma, rhoE, rho, U[0], U[1]])
+    p = (gamma-1.0) * (rhoE - 0.5 * rho * (U[0]**2 + U[1]**2))
+    #p = AD.processExternalFunction('calcP', args=[gamma, rhoE, rho, U[0], U[1]])
     H = (rhoE+p)/rho
 
     outputs = {}
@@ -22,4 +22,4 @@ def cons2prim(
     return outputs, outputs_AD
 
 if __name__=='__main__':
-    AD.compile(cons2prim, disableDerivs=True)
+    AD.compile(cons2prim, disableDerivs=False)

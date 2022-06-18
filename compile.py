@@ -82,11 +82,11 @@ def compile(func, functype='REPLACE', prefix='.', disableDerivs=False):
     DEBUG('Wrote struct file')
 
     # Create init function ----------------------------------------------------
-    buffer = FormattedBuffer()
-    writeOtherFiles(buffer, funcname, vars)
-    with open(dirname+'/src/init.c', 'w') as f:
-        f.write(buffer.getContents())
-    DEBUG('Wrote init file')
+    # buffer = FormattedBuffer()
+    # writeOtherFiles(buffer, funcname, vars)
+    # with open(dirname+'/src/init.c', 'w') as f:
+    #     f.write(buffer.getContents())
+    # DEBUG('Wrote init file')
 
     # Create calculate function -----------------------------------------------
     buffer = FormattedBuffer()
@@ -99,7 +99,7 @@ def compile(func, functype='REPLACE', prefix='.', disableDerivs=False):
     DEBUG('Wrote calculate file')
 
     # Run pymake --------------------------------------------------------------
-    #pwd = os.getcwd()
-    #os.chdir(dirname)
-    #call('pymake', shell=True)
-    #os.chdir(pwd)
+    pwd = os.getcwd()
+    os.chdir(dirname)
+    call('pymake', shell=True)
+    os.chdir(pwd)
