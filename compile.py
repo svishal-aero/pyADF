@@ -8,7 +8,6 @@ from .CodeGeneration.misc import writeStructFile, writeOtherFiles
 from .CodeGeneration.calculate import writeCalculateFile
 from .CodeGeneration.FormattedBuffer import FormattedBuffer
 
-# Set debug mode here
 debugMode = True
 
 def DEBUG(msg):
